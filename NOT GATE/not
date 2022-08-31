@@ -1,0 +1,23 @@
+`timescale 1ns / 1ps
+module NOT_GATE(
+    input A,
+    output B
+    );
+    assign B= ~A;
+endmodule
+
+
+
+
+`timescale 1ns / 1ps
+module TB_NOT;
+reg A;
+wire B;
+NOT_GATE TB(.A(A), .B(B));
+initial begin 
+A=1'b0;
+#10 A=1'b1;
+#10
+$finish;
+end 
+endmodule
