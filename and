@@ -1,0 +1,23 @@
+module gate_and(
+    input A,
+    input B,
+    output C
+    );
+    assign C= A&B;
+endmodule   
+
+
+`timescale 1ns / 1ps
+module TB_gate_AND;
+reg A,B;
+wire C;
+gate_and TB(.A(A),.B(B),.C(C));
+initial begin  
+#10A=1'b0;B=1'b0;
+#10 A=1'b0;B=1'b1;
+#10 A=1'b1;B=1'b0;
+#10 A=1'b1;B=1'b1;
+#10
+$finish;
+end
+endmodule
