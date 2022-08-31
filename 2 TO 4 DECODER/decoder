@@ -1,0 +1,64 @@
+DATA FLOW
+`timescale 1ns / 1ps
+module Decoder_DF(EN,A0,A1,D0,D1,D2,D3);
+input EN,A0,A1;
+output D0,D1,D2,D3;
+assign D0=(EN&~A0&~A1);
+assign D1=(EN&~A0&A1);
+assign D2=(EN&A0&~A1);
+assign D3=(EN&A0&A1);
+endmodule
+
+
+BEHAVIOURAL
+`timescale 1ns / 1ps
+module Decoder_BEHA(EN,A0,A1,D0,D1,D2,D3);
+input EN,A0,A1;
+output D0,D1,D2,D3;
+reg D0,D1,D2,D3;
+always @(A0&A1&EN)begin
+if(EN==1'b1)
+case({A1,A0})
+2'b00:{D3,D2,D1,D0}=4'b0001;
+2'b01:{D3,D2,D1,D0}=4'b0010;
+2'b10:{D3,D2,D1,D0}=4'b0100;
+2'b11:{D3,D2,D1,D0}=4'b1000;
+default:{D3,D2,D1,D0}=4'b0001;
+endcase
+if(EN==0)
+{D3,D2,D1,D0}=4'b0000;
+end
+endmodule
+
+
+STRUCTURAL
+`timescale 1ns / 1ps
+module Decoder_Stru(EN,A0,A1,D0,D1,D2,D3);
+input EN,A0,A1;
+output D0,D1,D2,D3;
+wire x,y;
+not u1(y,A1);
+not u2(x,A0);
+ and u3(D0,EN,y,x);
+ and u4(D1,EN,A0,y);
+ and u5(D2,EN,x,A1);
+ and u6(D3,EN,A0,A1);
+endmodule
+
+
+
+TEST BENCH
+`timescale 1ns / 1ps
+module TB_2_4_Decoder;
+reg EN, A0, A1;
+wire D0, D1, D2, D3;
+Decoder_DF decoder(.EN(EN), .A0(A0), .A1(A1), .D0(D0), .D1(D1), .D2(D2), .D3(D3));
+initial begin
+EN=1'b0; A1 =1'bX ; A0 =1'bX;
+#10 EN=1'b1; A1 =1'b0 ; A0 =1'b0;
+#10 EN=1'b1; A1 =1'b0 ; A0 =1'b1;
+#10 EN=1'b1; A1 =1'b1 ; A0 =1'b0;
+#10 EN=1'b1; A1 =1'b1 ; A0 =1'b1;
+#10$stop;
+end
+endmodule
