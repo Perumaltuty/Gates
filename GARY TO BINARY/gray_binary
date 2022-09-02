@@ -1,0 +1,26 @@
+`timescale 1ns / 1ps
+module gray_binary ( G ,B );
+output [3:0] B ;
+input [3:0] G ;
+assign B[3] = G[3];
+assign B[2] = G[3]^G[2];
+assign B[1] = G[3]^G[2]^G[1];
+assign B[0] = G[3]^G[2]^G[1]^G[0];
+endmodule
+
+
+test bench
+`timescale 1ns / 1ps
+module TB_gray_binary;
+reg [3:0]G;
+wire [3:0]B;
+gray_binary TB(.G(G) ,.B(B));
+always #5 G=G+1'b1;
+initial
+begin
+$monitor($time, "\tG=%b\t, B=%b\t", G,B);
+G <= 4'b0000;
+#80 $finish;
+end
+endmodule
+
